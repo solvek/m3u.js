@@ -1,0 +1,13 @@
+#EXTM3U param1=val1 param2=val2
+
+#EXTINF:0 p1=v1 p2=v2, Test
+http://sdfsdfsd.ua
+
+#EXTINF:-1,Test2
+http://url2
+
+#Some comment
+
+
+#EXTINF:500,Test3
+http://url3

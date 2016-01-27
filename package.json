@@ -1,0 +1,28 @@
+{
+  "name": "m3ujs",
+  "version": "1.0.0",
+  "description": "Parses and formats m3u files",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/solvek/m3u.js.git"
+  },
+  "keywords": [
+    "m3u",
+    "parsing",
+    "formatting"
+  ],
+  "author": "Sergi Adamchuk",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/solvek/m3u.js/issues"
+  },
+  "homepage": "https://github.com/solvek/m3u.js#readme",
+  "devDependencies": {
+    "chai": "*",
+    "mocha": "*"
+  }
+}
