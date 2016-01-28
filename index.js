@@ -29,6 +29,15 @@ function parseParams(pairs){
     return result;
 }
 
+function formatParams(params){
+    var result = '';
+    for(var key in params){
+        result += ' ' + key + '=' + params[key];
+    }
+
+    return result;
+}
+
 function parse(content){
     var result = {
         tracks: []
@@ -59,7 +68,7 @@ function parse(content){
             //console.log(line.substring(EXTINF.length, comma).trim());
             //console.log(util.inspect(params));
 
-            current.lenght = parseInt(params.shift().trim());
+            current.length = parseInt(params.shift().trim());
 
             current.params = parseParams(params);
             continue;
@@ -80,4 +89,23 @@ function parse(content){
     return result;
 }
 
+function format(m3u){
+    var result = EXTM3U;
+    if (m3u.header){
+        result += formatParams(m3u.header);
+    }
+    result+= '\n';
+    m3u.tracks.forEach(function(track){
+        result += EXTINF
+            +track.length
+            +formatParams(track.params)
+            +'\n'
+            +track.file
+            +'\n';
+    });
+
+    return result;
+}
+
 module.exports.parse = parse;
+module.exports.fortmat = format;
