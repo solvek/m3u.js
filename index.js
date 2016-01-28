@@ -99,6 +99,8 @@ function format(m3u){
         result += EXTINF
             +track.length
             +formatParams(track.params)
+            +","
+            +track.title
             +'\n'
             +track.file
             +'\n';
