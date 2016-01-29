@@ -12,8 +12,8 @@ var m3u = require('../index.js');
 describe("Parsing m3u", function() {
     var parsed = m3u.parse(fs.readFileSync('./test.m3u', 'utf8'));
 
-//var util = require('util');
-//console.log("Parsed: "+util.inspect(parsed));
+    //var util = require('util');
+    //console.log("Parsed: "+util.inspect(parsed));
 
     it("Should be parsed to object", function(){
         parsed.should.be.an('object');
