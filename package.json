@@ -1,6 +1,6 @@
 {
   "name": "m3ujs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Parses and formats m3u files",
   "main": "index.js",
   "scripts": {

@@ -110,4 +110,4 @@ function format(m3u){
 }
 
 module.exports.parse = parse;
-module.exports.fortmat = format;
+module.exports.format = format;
