@@ -71,6 +71,6 @@ describe("Parsing m3u", function() {
 describe("Formatting test", function(){
     it("Should format global params", function(){
         var formatted = m3u.format({header: {param1: 'val1', 'param2': 'val2'}, tracks: []});
-        formatted.should.equal("#EXTM3U param1=val1 param2=val2\n");
+        formatted.should.equal('#EXTM3U param1="val1" param2="val2"\n');
     });
 });

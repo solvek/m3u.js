@@ -16,6 +16,9 @@ function parseParams(pairs){
         pair = pairs[i].split('=');
         if (pair.length > 1){
             value = pair[1].trim();
+            if (value[0]='"' && value[value.length-1]=='"'){
+                value = value.substr(1, value.length-2);
+            }
         }
         else {
             value = null;
@@ -32,7 +35,7 @@ function parseParams(pairs){
 function formatParams(params){
     var result = '';
     for(var key in params){
-        result += ' ' + key + '=' + params[key];
+        result += ' ' + key + '="' + params[key]+'"';
     }
 
     return result;
