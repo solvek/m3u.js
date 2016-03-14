@@ -24,6 +24,11 @@ describe("Parsing m3u", function() {
 
     it("Should have header with 2 params", function(){
         Object.keys(header).length.should.equal(2);
+        header.should.be.an('object');
+        header.should.have.ownProperty('param1');
+        header.should.have.ownProperty('param2');
+        header.param1.should.equal('val1');
+        header.param2.should.equal('val2 val3');
     });
 
     var tracks = parsed.tracks;
@@ -48,7 +53,7 @@ describe("Parsing m3u", function() {
         Object.keys(params).length.should.equal(2);
         params.should.have.ownProperty('p1');
         params.should.have.ownProperty('p2');
-        params.p1.should.equal('v1');
+        params.p1.should.equal('v1 t');
         params.p2.should.equal('v2');
     });
 

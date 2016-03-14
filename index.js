@@ -5,27 +5,33 @@
 var EXTM3U = '#EXTM3U';
 var EXTINF = '#EXTINF:';
 
-var util = require('util');
+var REGEX = /(?:\s*(-?\d+))?(?:\s+("([^"]+)"|([^=]+))="([^"]+)")?(?:\s*,\s*(.+)\s*)?/g;
 
-function parseParams(pairs){
-    var result = {};
+//var util = require('util');
 
-    var pair, value;
+function parseData(data){
+    var result = {params:{}};
 
-    for(var i=0;i<pairs.length;i++){
-        pair = pairs[i].split('=');
-        if (pair.length > 1){
-            value = pair[1].trim();
-            if (value[0]='"' && value[value.length-1]=='"'){
-                value = value.substr(1, value.length-2);
-            }
+    var m, paramName;
+
+    while ((m = REGEX.exec(data)) !== null) {
+        if (m.index === REGEX.lastIndex) {
+            REGEX.lastIndex++;
         }
-        else {
-            value = null;
+
+        //console.log(util.inspect(m));
+        if (m[1]){
+            result.length = parseInt(m[1]);
         }
-        result[pair[0].trim()] = value;
-        //console.log(pair);
-        //console.log(util.inspect(result));
+
+        if (m[6]){
+            result.title = m[6];
+        }
+
+        if (m[5]){
+            paramName = m[3] ? m[3] : m[4];
+            result.params[paramName] = m[5];
+        }
     }
 
     //console.log(util.inspect(result));
@@ -49,7 +55,7 @@ function parse(content){
     //console.log(content);
     var lines = content.split('\n');
 
-    var line, current = {}, comma, params;
+    var line, current = null;
     for(var i=0;i<lines.length;i++){
         line = lines[i].trim();
 
@@ -58,22 +64,13 @@ function parse(content){
         }
 
         if (line.indexOf(EXTM3U) == 0){
-            result.header = parseParams(line.substr(EXTM3U.length).trim().split(' '));
+            current = parseData(line.substr(EXTM3U.length));
+            result.header = current.params;
             continue;
         }
 
         if (line.indexOf(EXTINF) == 0){
-            comma = line.lastIndexOf(',');
-            current.title = line.substr(comma+1).trim();
-
-            params = line.substring(EXTINF.length, comma).trim().split(' ');
-
-            //console.log(line.substring(EXTINF.length, comma).trim());
-            //console.log(util.inspect(params));
-
-            current.length = parseInt(params.shift().trim());
-
-            current.params = parseParams(params);
+            current = parseData(line.substr(EXTINF.length));
             continue;
         }
 
@@ -81,12 +78,14 @@ function parse(content){
             continue;
         }
 
-        current.file = line;
+        if (current) {
+            current.file = line;
 
-        //console.log(util.inspect(current));
-        result.tracks.push(current);
+            //console.log(util.inspect(current));
+            result.tracks.push(current);
 
-        current = {};
+            current = null;
+        }
     }
 
     return result;

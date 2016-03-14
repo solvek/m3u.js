@@ -1,6 +1,6 @@
-#EXTM3U param1="val1" param2="val2"
+#EXTM3U param1="val1" param2="val2 val3"
 
-#EXTINF:0 p1="v1" p2="v2", Test
+#EXTINF:0 p1="v1 t" "p2"="v2", Test
 http://sdfsdfsd.ua
 
 #EXTINF:-1,Test2
