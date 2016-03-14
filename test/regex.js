@@ -4,9 +4,9 @@
 
 var util = require('util');
 
-var REGEX = /(?:\s*:\s*(-?\d+))?(?:\s+("([^"]+)"|([^=]+))="([^"]+)")*?(?:\s*,\s*(.+)\s*)?/g;
+var REGEX = /\s*(-?\d+)/g;
 
-var str = ' param1="val1" param2="val2 val3"';
+var str = '500,Test3';
 
 var res = str.match(REGEX);
 

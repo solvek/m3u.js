@@ -5,33 +5,27 @@
 var EXTM3U = '#EXTM3U';
 var EXTINF = '#EXTINF:';
 
-var REGEX = /(?:\s*(-?\d+))?(?:\s+("([^"]+)"|([^=]+))="([^"]+)")?(?:\s*,\s*(.+)\s*)?/g;
+var REGEX_PARAMS = /\s*("([^"]+)"|([^=]+))=("([^"]+)"|(\S+))/g;
+var REGEX_DURATION = /\s*(-?\d+)/g;
 
 //var util = require('util');
 
-function parseData(data){
-    var result = {params:{}};
+function parseParams(data){
+    var result = {};
 
-    var m, paramName;
+    var m, key, value;
 
-    while ((m = REGEX.exec(data)) !== null) {
-        if (m.index === REGEX.lastIndex) {
-            REGEX.lastIndex++;
+    while ((m = REGEX_PARAMS.exec(data)) !== null) {
+        if (m.index === REGEX_PARAMS.lastIndex) {
+            REGEX_PARAMS.lastIndex++;
         }
 
         //console.log(util.inspect(m));
-        if (m[1]){
-            result.length = parseInt(m[1]);
-        }
 
-        if (m[6]){
-            result.title = m[6];
-        }
+        key = m[2] ? m[2] : m[3];
+        value = m[5] ? m[5] : m[6];
 
-        if (m[5]){
-            paramName = m[3] ? m[3] : m[4];
-            result.params[paramName] = m[5];
-        }
+        result[key] = value;
     }
 
     //console.log(util.inspect(result));
@@ -55,7 +49,7 @@ function parse(content){
     //console.log(content);
     var lines = content.split('\n');
 
-    var line, current = null;
+    var line, current = {}, pos, duration;
     for(var i=0;i<lines.length;i++){
         line = lines[i].trim();
 
@@ -64,13 +58,20 @@ function parse(content){
         }
 
         if (line.indexOf(EXTM3U) == 0){
-            current = parseData(line.substr(EXTM3U.length));
-            result.header = current.params;
+            result.header = parseParams(line.substr(EXTM3U.length));
             continue;
         }
 
         if (line.indexOf(EXTINF) == 0){
-            current = parseData(line.substr(EXTINF.length));
+            pos = line.lastIndexOf(',');
+            current.title = line.substr(pos+1).trim();
+
+            line = line.substring(EXTINF.length, pos).trim();
+            duration = line.match(REGEX_DURATION);
+
+            current.length = parseInt(duration[0]);
+
+            current.params = parseParams(line.substr(duration[0].length));
             continue;
         }
 
@@ -78,14 +79,12 @@ function parse(content){
             continue;
         }
 
-        if (current) {
-            current.file = line;
+        current.file = line;
 
-            //console.log(util.inspect(current));
-            result.tracks.push(current);
+        //console.log(util.inspect(current));
+        result.tracks.push(current);
 
-            current = null;
-        }
+        current = {};
     }
 
     return result;
